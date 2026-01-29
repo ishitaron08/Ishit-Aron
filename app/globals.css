@@ -1,26 +1,454 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* -------------------------------------------------
+   Base Layer (Tailwind v4 safe)
+-------------------------------------------------- */
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Set default font family - JetBrains Mono */
+  html {
+    font-family: var(--font-mono), ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* -------------------------------------------------
+   DevOps Dashboard Color Tokens
+-------------------------------------------------- */
+:root {
+  --background: 222 47% 6%;
+  --foreground: 210 40% 98%;
+
+  --card: 222 47% 8%;
+  --card-foreground: 210 40% 98%;
+
+  --popover: 222 47% 8%;
+  --popover-foreground: 210 40% 98%;
+
+  --primary: 160 100% 50%;
+  --primary-foreground: 222 47% 6%;
+
+  --secondary: 217 33% 17%;
+  --secondary-foreground: 210 40% 98%;
+
+  --muted: 217 33% 17%;
+  --muted-foreground: 215 20% 55%;
+
+  --accent: 188 100% 50%;
+  --accent-foreground: 222 47% 6%;
+
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 217 33% 20%;
+  --input: 217 33% 17%;
+  --ring: 160 100% 50%;
+
+  --radius: 0.375rem;
+  
+  /* DevOps specific tokens */
+  --devops-green: #00ff88;
+  --devops-cyan: #00d4ff;
+  --devops-amber: #ffb800;
+  --devops-red: #ff4757;
+  --devops-purple: #a855f7;
+  --grid-color: rgba(30, 41, 59, 0.5);
+}
+
+/* -------------------------------------------------
+   Dark Mode Override
+-------------------------------------------------- */
+.dark {
+  --background: 222 47% 4%;
+  --foreground: 210 40% 98%;
+  --card: 222 47% 6%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222 47% 6%;
+  --popover-foreground: 210 40% 98%;
+  --border: 217 33% 15%;
+}
+
+/* -------------------------------------------------
+   DevOps Dashboard Scrollbar
+-------------------------------------------------- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(10, 15, 26, 0.8);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 136, 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 136, 0.5);
+}
+
+/* -------------------------------------------------
+   Dashboard Panel Styles
+-------------------------------------------------- */
+.dashboard-panel {
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(10, 15, 26, 0.98) 100%);
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 0.75rem;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+}
+
+.dashboard-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.4), transparent);
+}
+
+.dashboard-panel-header {
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid rgba(30, 41, 59, 0.9);
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(226, 232, 240, 0.85);
+  font-weight: 500;
+}
+
+.dashboard-panel-content {
+  padding: 1.25rem;
+}
+
+/* -------------------------------------------------
+   Status Indicators
+-------------------------------------------------- */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.status-dot::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  animation: pulse-ring 1.5s ease-out infinite;
+}
+
+.status-online {
+  background-color: var(--devops-green);
+  box-shadow: 0 0 10px var(--devops-green);
+}
+
+.status-online::after {
+  border: 1px solid var(--devops-green);
+}
+
+.status-warning {
+  background-color: var(--devops-amber);
+  box-shadow: 0 0 10px var(--devops-amber);
+}
+
+.status-warning::after {
+  border: 1px solid var(--devops-amber);
+}
+
+.status-error {
+  background-color: var(--devops-red);
+  box-shadow: 0 0 10px var(--devops-red);
+}
+
+.status-error::after {
+  border: 1px solid var(--devops-red);
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+/* -------------------------------------------------
+   Terminal / Log Styles
+-------------------------------------------------- */
+.terminal {
+  background: rgba(10, 15, 26, 0.95);
+  border: 1px solid rgba(30, 41, 59, 0.8);
+  border-radius: 0.375rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.terminal-header {
+  padding: 0.5rem 0.75rem;
+  background: rgba(17, 24, 39, 0.8);
+  border-bottom: 1px solid rgba(30, 41, 59, 0.8);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.terminal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.terminal-body {
+  padding: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.log-line {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.125rem 0;
+}
+
+.log-timestamp {
+  color: rgba(100, 116, 139, 0.8);
+  flex-shrink: 0;
+}
+
+.log-level-info { color: var(--devops-cyan); }
+.log-level-success { color: var(--devops-green); }
+.log-level-warning { color: var(--devops-amber); }
+.log-level-error { color: var(--devops-red); }
+
+/* -------------------------------------------------
+   Grid Background
+-------------------------------------------------- */
+.grid-background {
+  background-image: 
+    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.grid-background-dense {
+  background-size: 20px 20px;
+}
+
+/* -------------------------------------------------
+   Glow Effects
+-------------------------------------------------- */
+.glow-green { box-shadow: 0 0 20px rgba(0, 255, 136, 0.25); }
+.glow-cyan { box-shadow: 0 0 20px rgba(0, 212, 255, 0.25); }
+.glow-amber { box-shadow: 0 0 20px rgba(255, 184, 0, 0.25); }
+.glow-red { box-shadow: 0 0 20px rgba(255, 71, 87, 0.25); }
+
+.hover-glow-green:hover { box-shadow: 0 0 30px rgba(0, 255, 136, 0.35); }
+.hover-glow-cyan:hover { box-shadow: 0 0 30px rgba(0, 212, 255, 0.35); }
+.hover-glow-amber:hover { box-shadow: 0 0 30px rgba(255, 184, 0, 0.35); }
+
+/* -------------------------------------------------
+   Pipeline / Progress Styles
+-------------------------------------------------- */
+.pipeline-track {
+  height: 4px;
+  background: rgba(30, 41, 59, 0.8);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.pipeline-progress {
+  height: 100%;
+  background: linear-gradient(90deg, var(--devops-green), var(--devops-cyan));
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+/* -------------------------------------------------
+   Metric Card Styles
+-------------------------------------------------- */
+.metric-value {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--devops-green) 0%, var(--devops-cyan) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.metric-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(148, 163, 184, 0.7);
+  margin-top: 0.25rem;
+}
+
+/* -------------------------------------------------
+   Service Health Badge
+-------------------------------------------------- */
+.service-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  background: rgba(17, 24, 39, 0.8);
+  border: 1px solid rgba(30, 41, 59, 0.8);
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.service-badge:hover {
+  border-color: rgba(0, 255, 136, 0.4);
+  background: rgba(0, 255, 136, 0.05);
+}
+
+/* -------------------------------------------------
+   Smooth Scroll & Selection
+-------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background-color: rgba(0, 255, 136, 0.25);
+  color: white;
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid rgba(0, 255, 136, 0.5);
+  outline-offset: 2px;
+}
+
+/* -------------------------------------------------
+   Animations
+-------------------------------------------------- */
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+
+@keyframes shimmer {
+  from { background-position: 0 0; }
+  to { background-position: -200% 0; }
+}
+
+@keyframes move {
+  0% { transform: translateX(-200px); }
+  100% { transform: translateX(200px); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(0, 255, 136, 0.6); }
+}
+
+@keyframes scan-line {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent; }
+  50% { border-color: var(--devops-green); }
+}
+
+/* Animation Classes */
+.animate-accordion-down { animation: accordion-down 0.2s ease-out; }
+.animate-accordion-up { animation: accordion-up 0.2s ease-out; }
+.animate-shimmer { animation: shimmer 2s linear infinite; }
+.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-scan-line { animation: scan-line 3s linear infinite; }
+
+/* Premium Sidebar styles removed - using cleaner borders */
+
+/* -------------------------------------------------
+   Premium Sidebar Scrollbar
+-------------------------------------------------- */
+.sidebar-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 212, 255, 0.15);
+  border-radius: 2px;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 212, 255, 0.3);
+}
+
+/* -------------------------------------------------
+   Text Glow Effects
+-------------------------------------------------- */
+.text-glow-cyan {
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.5),
+               0 0 20px rgba(0, 212, 255, 0.3),
+               0 0 30px rgba(0, 212, 255, 0.1);
+}
+
+.text-glow-green {
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5),
+               0 0 20px rgba(0, 255, 136, 0.3),
+               0 0 30px rgba(0, 255, 136, 0.1);
+}
+
+.text-glow-white {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5),
+               0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* -------------------------------------------------
+   Responsive Utilities
+-------------------------------------------------- */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .metric-value {
+    font-size: 1.5rem;
+  }
+  
+  .dashboard-panel-header {
+    font-size: 0.6875rem;
+  }
 }
