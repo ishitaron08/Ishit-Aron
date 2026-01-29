@@ -159,7 +159,7 @@ export function ProjectsSection() {
 
       {/* Project Cards Grid */}
       <motion.div 
-        className="grid md:grid-cols-2 gap-6"
+        className="grid gap-4 md:gap-6 md:grid-cols-2"
         variants={staggerContainerVariants}
         initial="hidden"
         whileInView="visible"

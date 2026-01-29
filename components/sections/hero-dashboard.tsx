@@ -79,23 +79,25 @@ const GradientLine = ({ direction = "right" }: { direction?: "left" | "right" })
 
 export function HeroSection() {
   const prefersReducedMotion = useReducedMotion();
+  // Disable heavy animations on mobile/reduced motion
+  const shouldAnimate = !prefersReducedMotion;
 
   return (
-    <section id="hero" className="min-h-screen pt-6 pb-10 relative">
-      {/* Dark overlay behind hero for text contrast */}
+    <section id="hero" className="min-h-[calc(100vh-120px)] md:min-h-screen pt-4 md:pt-6 pb-24 md:pb-10 relative">
+      {/* Dark overlay behind hero for text contrast - simplified on mobile */}
       <div className="absolute inset-0 bg-gradient-to-b from-devops-navy/90 via-devops-navy/70 to-transparent pointer-events-none" />
       
       {/* Welcome Banner */}
       <motion.div
-        initial="hidden"
+        initial={shouldAnimate ? "hidden" : false}
         animate="visible"
         variants={staggerContainerVariants}
-        className="mb-10 relative z-10"
+        className="mb-6 md:mb-10 relative z-10"
       >
-        {/* Section label with animated lines */}
+        {/* Section label with animated lines - hidden on mobile */}
         <motion.div 
           variants={fadeUpVariants}
-          className="flex items-center gap-3 mb-6"
+          className="hidden md:flex items-center gap-3 mb-6"
         >
           <GradientLine direction="right" />
           <motion.span 
@@ -112,20 +114,20 @@ export function HeroSection() {
         {/* Animated headline with highlight bar effect */}
         <motion.div 
           variants={fadeUpVariants}
-          className="relative text-center mb-8"
+          className="relative text-center mb-6 md:mb-8"
         >
-          {/* Subtle glow behind heading */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          {/* Subtle glow behind heading - only on desktop */}
+          <div className="hidden md:flex absolute inset-0 items-center justify-center pointer-events-none">
             <div className="w-[500px] h-16 bg-devops-green/5 blur-3xl rounded-full" />
           </div>
           
           <motion.h1 
-            className="relative text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
+            className="relative text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
           >
             <span className="text-white">Hi, I&apos;m </span>
             <motion.span 
               className="relative inline-block text-white"
-              initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
+              initial={shouldAnimate ? { opacity: 0, y: 20, filter: "blur(10px)" } : false}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ delay: 0.4, duration: 0.5, ease: easings.smooth }}
             >
@@ -135,13 +137,13 @@ export function HeroSection() {
           
           {/* Role badge */}
           <motion.div
-            className="mt-6 flex justify-center"
-            initial={{ opacity: 0, y: 10 }}
+            className="mt-4 md:mt-6 flex justify-center"
+            initial={shouldAnimate ? { opacity: 0, y: 10 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.4 }}
           >
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-devops-navy-light/80 border border-devops-grid-line text-sm font-mono text-devops-cyan">
-              <span className="w-2 h-2 rounded-full bg-devops-green animate-pulse" />
+            <span className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 rounded-full bg-devops-navy-light/80 border border-devops-grid-line text-xs md:text-sm font-mono text-devops-cyan">
+              <span className="w-2 h-2 rounded-full bg-devops-green" />
               Full Stack Developer
             </span>
           </motion.div>
@@ -149,12 +151,12 @@ export function HeroSection() {
 
         {/* Animated tagline with improved contrast */}
         <motion.div 
-          className="relative max-w-2xl mx-auto"
-          initial={{ opacity: 0, y: 15 }}
+          className="relative max-w-2xl mx-auto px-4"
+          initial={shouldAnimate ? { opacity: 0, y: 15 } : false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.5, ease: easings.smooth }}
         >
-          <p className="text-slate-300 text-center text-base md:text-lg leading-relaxed px-4">
+          <p className="text-slate-300 text-center text-sm md:text-base lg:text-lg leading-relaxed">
             A passionate Computer Science student building modern,
             scalable, and beautiful web applications.
           </p>
@@ -163,9 +165,9 @@ export function HeroSection() {
 
       {/* Metrics Grid with staggered animation */}
       <motion.div 
-        className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-8 relative z-10"
+        className="grid grid-cols-2 gap-3 md:gap-5 lg:grid-cols-4 mb-6 md:mb-8 relative z-10"
         variants={staggerContainerVariants}
-        initial="hidden"
+        initial={shouldAnimate ? "hidden" : false}
         animate="visible"
       >
         {stats.map((stat) => (
@@ -173,11 +175,10 @@ export function HeroSection() {
             key={stat.label}
             variants={fadeUpVariants}
             whileHover={prefersReducedMotion ? {} : { 
-              y: -6, 
-              scale: 1.02,
+              y: -4, 
               transition: { duration: 0.2 } 
             }}
-            className="cursor-default"
+            className="cursor-default active:scale-[0.98] transition-transform"
           >
             <MetricCard
               label={stat.label}
@@ -192,8 +193,8 @@ export function HeroSection() {
 
       {/* Main Content Grid */}
       <motion.div 
-        className="grid lg:grid-cols-2 gap-6 relative z-10"
-        initial="hidden"
+        className="grid gap-4 md:gap-6 lg:grid-cols-2 relative z-10"
+        initial={shouldAnimate ? "hidden" : false}
         whileInView="visible"
         viewport={viewportOnce}
         variants={staggerContainerVariants}
@@ -218,20 +219,15 @@ export function HeroSection() {
                 <motion.div
                   key={info.key}
                   variants={slideInLeftVariants}
-                  className="flex items-center justify-between py-3 border-b border-devops-grid-line/40 last:border-0 group rounded-md px-2 -mx-2"
-                  whileHover={prefersReducedMotion ? {} : { 
-                    x: 4,
-                    backgroundColor: "rgba(0, 255, 136, 0.04)",
-                  }}
-                  transition={{ duration: 0.2 }}
+                  className="flex items-center justify-between py-2.5 md:py-3 border-b border-devops-grid-line/40 last:border-0 group rounded-md px-2 -mx-2 active:bg-devops-green/5 md:hover:bg-devops-green/[0.04] transition-colors"
                 >
-                  <span className="text-sm text-slate-400 font-mono font-medium group-hover:text-slate-300 transition-colors">
+                  <span className="text-xs md:text-sm text-slate-400 font-mono font-medium">
                     {info.key}
                   </span>
                   <span
                     className={cn(
-                      "text-sm font-semibold transition-colors",
-                      info.highlight ? "text-devops-green" : "text-slate-200 group-hover:text-white"
+                      "text-xs md:text-sm font-semibold",
+                      info.highlight ? "text-devops-green" : "text-slate-200"
                     )}
                   >
                     {info.highlight && (
@@ -268,22 +264,17 @@ export function HeroSection() {
                 <motion.div
                   key={index}
                   variants={fadeUpVariants}
-                  whileHover={prefersReducedMotion ? {} : { 
-                    x: 4,
-                    backgroundColor: "rgba(0, 255, 136, 0.04)",
-                    borderColor: "rgba(0, 255, 136, 0.35)",
-                  }}
-                  transition={{ duration: 0.2 }}
                   className={cn(
                     "flex items-start gap-3 p-3 rounded-lg cursor-default",
                     "bg-devops-navy/50 border border-devops-grid-line/40",
+                    "active:bg-devops-green/5 md:hover:bg-devops-green/[0.04]",
                     "transition-colors duration-200"
                   )}
                 >
                   <span className="text-devops-amber mt-0.5 flex-shrink-0">
                     {achievement.icon}
                   </span>
-                  <span className="text-sm text-slate-200 leading-relaxed">{achievement.text}</span>
+                  <span className="text-xs md:text-sm text-slate-200 leading-relaxed">{achievement.text}</span>
                 </motion.div>
               ))}
             </motion.div>

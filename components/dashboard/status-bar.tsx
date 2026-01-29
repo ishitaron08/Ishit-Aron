@@ -77,7 +77,7 @@ export function StatusBar({ className }: StatusBarProps) {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        "flex items-center justify-between px-4 py-2",
+        "hidden md:flex items-center justify-between px-4 py-2",
         "bg-devops-navy-light/80 border-b border-devops-grid-line",
         "font-mono text-xs",
         className

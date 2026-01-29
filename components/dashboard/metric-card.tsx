@@ -47,14 +47,14 @@ export function MetricCard({
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
       className={cn(
-        "bg-slate-900/50 border border-slate-700 rounded-lg p-5",
+        "bg-slate-900/50 border border-slate-700 rounded-lg p-3 md:p-5",
         "transition-all duration-300 backdrop-blur-sm",
         className
       )}
     >
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex items-start justify-between mb-2 md:mb-4">
         {icon && (
-          <div className="p-2.5 rounded-lg bg-slate-800/50 border border-slate-600">
+          <div className="p-2 md:p-2.5 rounded-lg bg-slate-800/50 border border-slate-600">
             <span className="text-white">{icon}</span>
           </div>
         )}
@@ -67,17 +67,17 @@ export function MetricCard({
           </div>
         )}
       </div>
-      <div className="space-y-1.5">
+      <div className="space-y-1">
         <div
           className={cn(
-            "font-mono text-3xl font-bold text-white"
+            "font-mono text-2xl md:text-3xl font-bold text-white"
           )}
         >
           {prefix}
           {value}
           {suffix}
         </div>
-        <div className="text-xs uppercase tracking-[0.15em] text-slate-400 font-medium">{label}</div>
+        <div className="text-[10px] md:text-xs uppercase tracking-[0.1em] md:tracking-[0.15em] text-slate-400 font-medium">{label}</div>
       </div>
     </motion.div>
   );

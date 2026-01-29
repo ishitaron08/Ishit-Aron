@@ -48,7 +48,7 @@ export function AboutSection() {
         </div>
       </motion.div>
 
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div className="grid gap-4 md:gap-6 lg:grid-cols-2">
         {/* Bio Panel */}
         <Panel
           title="About.config"
@@ -71,19 +71,19 @@ export function AboutSection() {
             ))}
 
             {/* Quick Info Cards */}
-            <div className="grid grid-cols-2 gap-3 pt-4 border-t border-devops-grid-line/50">
-              <div className="flex items-center gap-2 p-2 rounded-lg bg-devops-navy/40">
-                <MapPin className="w-4 h-4 text-devops-cyan" />
-                <div>
-                  <div className="text-xs text-slate-500">Location</div>
-                  <div className="text-sm text-slate-300">Meerut, India</div>
+            <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 pt-4 border-t border-devops-grid-line/50">
+              <div className="flex items-center gap-2 p-2 rounded-lg bg-devops-navy/40 min-h-[44px]">
+                <MapPin className="w-4 h-4 text-devops-cyan flex-shrink-0" />
+                <div className="min-w-0">
+                  <div className="text-[10px] md:text-xs text-slate-500">Location</div>
+                  <div className="text-xs md:text-sm text-slate-300 truncate">Meerut, India</div>
                 </div>
               </div>
-              <div className="flex items-center gap-2 p-2 rounded-lg bg-devops-navy/40">
-                <Briefcase className="w-4 h-4 text-devops-green" />
-                <div>
-                  <div className="text-xs text-slate-500">Status</div>
-                  <div className="text-sm text-devops-green">Open to Work</div>
+              <div className="flex items-center gap-2 p-2 rounded-lg bg-devops-navy/40 min-h-[44px]">
+                <Briefcase className="w-4 h-4 text-devops-green flex-shrink-0" />
+                <div className="min-w-0">
+                  <div className="text-[10px] md:text-xs text-slate-500">Status</div>
+                  <div className="text-xs md:text-sm text-devops-green">Open to Work</div>
                 </div>
               </div>
             </div>

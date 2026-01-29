@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   LayoutDashboard,
   User,
@@ -19,6 +19,22 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+
+// Hook to detect mobile/touch devices
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
+  return isMobile;
+};
 
 interface PremiumSidebarProps {
   className?: string;
@@ -94,6 +110,8 @@ export function PremiumSidebar({ className }: PremiumSidebarProps) {
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
   const [uptime, setUptime] = useState({ hours: 0, minutes: 0, seconds: 0 });
   const [mounted, setMounted] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+  const isMobile = useIsMobile();
 
   // Set mounted state and initialize time on client only
   useEffect(() => {
@@ -151,65 +169,154 @@ export function PremiumSidebar({ className }: PremiumSidebarProps) {
 
   return (
     <>
-      {/* Mobile Toggle Button */}
-      <motion.button
-        onClick={() => setIsOpen(!isOpen)}
-        whileTap={{ scale: 0.95 }}
-        className={cn(
-          "fixed top-4 left-4 z-50 p-3 rounded-xl",
-          "bg-[#0d1321]/90 backdrop-blur-md",
-          "border border-white/[0.08]",
-          "text-slate-400 hover:text-white",
-          "shadow-lg shadow-black/30",
-          "lg:hidden transition-all duration-300",
-          isOpen && "text-[#00d4ff]"
-        )}
-      >
-        <AnimatePresence mode="wait">
-          {isOpen ? (
-            <motion.div
-              key="close"
-              initial={{ rotate: -90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: 90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <X className="w-5 h-5" />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="menu"
-              initial={{ rotate: 90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: -90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
+      {/* Mobile Bottom Navigation - Touch-first design */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
+        <div className="bg-[#0a0f1a]/95 backdrop-blur-lg border-t border-slate-700/50 px-2 py-2 safe-area-pb">
+          <div className="flex items-center justify-around">
+            {navItems.slice(0, 5).map((item) => {
+              const Icon = item.icon;
+              const isActive = activeSection === item.href;
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className={cn(
+                    "flex flex-col items-center justify-center min-w-[56px] min-h-[48px] rounded-xl",
+                    "transition-colors duration-200 active:scale-95",
+                    isActive
+                      ? "text-cyan-400 bg-cyan-500/10"
+                      : "text-slate-500 active:bg-slate-800/50"
+                  )}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="text-[10px] mt-1 font-medium">
+                    {item.label.split(' ')[0]}
+                  </span>
+                </Link>
+              );
+            })}
+            {/* More menu button */}
+            <button
+              onClick={() => setIsOpen(true)}
+              className={cn(
+                "flex flex-col items-center justify-center min-w-[56px] min-h-[48px] rounded-xl",
+                "transition-colors duration-200 active:scale-95",
+                "text-slate-500 active:bg-slate-800/50"
+              )}
             >
               <Menu className="w-5 h-5" />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.button>
+              <span className="text-[10px] mt-1 font-medium">More</span>
+            </button>
+          </div>
+        </div>
+      </nav>
 
-      {/* Backdrop */}
+      {/* Mobile Slide-in Drawer */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 lg:hidden"
-            onClick={() => setIsOpen(false)}
-          />
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/80 z-50 md:hidden"
+              onClick={() => setIsOpen(false)}
+            />
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+              className="fixed top-0 right-0 bottom-0 w-[280px] z-50 bg-[#0a0f1a] border-l border-slate-700/50 md:hidden overflow-y-auto"
+            >
+              <div className="p-4">
+                {/* Close button */}
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="absolute top-4 right-4 p-2 rounded-lg text-slate-400 hover:text-white active:bg-slate-800"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+                
+                {/* Profile section */}
+                <div className="mt-8 mb-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-emerald-500 p-[1.5px]">
+                      <div className="w-full h-full rounded-[10px] bg-[#0a0f1a] flex items-center justify-center">
+                        <span className="text-white font-bold text-lg">IA</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="font-semibold text-white">Ishit Aron</div>
+                      <div className="text-xs text-emerald-500">Available for hire</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Navigation links */}
+                <div className="space-y-1">
+                  {navItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = activeSection === item.href;
+                    return (
+                      <Link
+                        key={item.label}
+                        href={item.href}
+                        onClick={() => setIsOpen(false)}
+                        className={cn(
+                          "flex items-center gap-3 px-4 py-3 rounded-xl min-h-[48px]",
+                          "transition-colors duration-200 active:scale-[0.98]",
+                          isActive
+                            ? "bg-cyan-500/10 text-white"
+                            : "text-slate-400 active:bg-slate-800/50"
+                        )}
+                      >
+                        <Icon className={cn("w-5 h-5", isActive && "text-cyan-400")} />
+                        <span className="font-medium">{item.label}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+
+                {/* Download CV button */}
+                <a
+                  href="/resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full py-3 mt-6 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 font-medium active:scale-[0.98]"
+                >
+                  <FileDown className="w-4 h-4" />
+                  Download CV
+                </a>
+
+                {/* Social links */}
+                <div className="flex items-center justify-center gap-4 mt-6">
+                  {socialLinks.map((link) => {
+                    const Icon = link.icon;
+                    return (
+                      <a
+                        key={link.label}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-3 rounded-xl text-slate-400 bg-slate-800/50 active:bg-slate-700"
+                      >
+                        <Icon className="w-5 h-5" />
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
 
-      {/* Sidebar Container */}
+      {/* Desktop Sidebar Container - Hidden on mobile */}
       <div
         className={cn(
-          "fixed top-0 left-0 h-screen w-[260px] z-40 p-3",
-          "transition-transform duration-300 ease-out",
-          "lg:sticky lg:top-0 lg:h-screen lg:translate-x-0",
-          isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+          "hidden md:block fixed top-0 left-0 h-screen w-[260px] z-40 p-3",
+          "lg:sticky lg:top-0 lg:h-screen",
           className
         )}
       >

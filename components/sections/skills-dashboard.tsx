@@ -151,9 +151,9 @@ export function SkillsSection() {
         </Panel>
       </motion.div>
 
-      {/* Category Breakdown - 2 columns for better symmetry */}
+      {/* Category Breakdown - responsive grid */}
       <motion.div 
-        className="grid md:grid-cols-2 gap-4"
+        className="grid gap-3 md:gap-4 md:grid-cols-2"
         variants={staggerContainerVariants}
         initial="hidden"
         whileInView="visible"
@@ -163,34 +163,25 @@ export function SkillsSection() {
           <motion.div
             key={category.name}
             variants={categoryVariants}
-            whileHover={prefersReducedMotion ? {} : { 
-              borderColor: "rgba(0, 255, 136, 0.3)",
-              y: -4,
-            }}
-            transition={{ duration: 0.2 }}
             className={cn(
-              "bg-devops-navy-light/60 border border-devops-grid-line rounded-lg p-4",
-              "transition-colors cursor-default"
+              "bg-devops-navy-light/60 border border-devops-grid-line rounded-lg p-3 md:p-4",
+              "transition-colors cursor-default active:bg-devops-green/5 md:hover:border-devops-green/30"
             )}
           >
-            <div className="flex items-center gap-2 mb-3">
-              <motion.span 
-                className={`text-${category.color}`}
-                whileHover={prefersReducedMotion ? {} : { rotate: 10, scale: 1.1 }}
-                transition={{ duration: 0.2 }}
-              >
+            <div className="flex items-center gap-2 mb-2 md:mb-3">
+              <span className={`text-${category.color}`}>
                 {category.icon}
-              </motion.span>
+              </span>
               <span className="text-sm font-medium text-slate-300">
                 {category.name}
               </span>
-              <span className="ml-auto text-xs font-mono text-slate-500">
+              <span className="ml-auto text-[10px] md:text-xs font-mono text-slate-500">
                 {category.skills.length} services
               </span>
             </div>
 
             <motion.div 
-              className="space-y-2"
+              className="space-y-1.5 md:space-y-2"
               variants={staggerContainerVariants}
               initial="hidden"
               whileInView="visible"
@@ -200,30 +191,13 @@ export function SkillsSection() {
                 <motion.div
                   key={skill}
                   variants={skillItemVariants}
-                  whileHover={prefersReducedMotion ? {} : { 
-                    x: 4, 
-                    backgroundColor: "rgba(0, 255, 136, 0.05)",
-                  }}
-                  transition={{ duration: 0.15 }}
-                  className="flex items-center justify-between py-1.5 px-2 rounded bg-devops-navy/40"
+                  className="flex items-center justify-between py-1.5 px-2 rounded bg-devops-navy/40 active:bg-devops-green/5 md:hover:bg-devops-green/5 transition-colors"
                 >
                   <div className="flex items-center gap-2">
-                    <motion.span 
-                      className="w-1.5 h-1.5 rounded-full bg-devops-green"
-                      animate={prefersReducedMotion ? {} : { 
-                        scale: [1, 1.2, 1],
-                        opacity: [0.8, 1, 0.8],
-                      }}
-                      transition={{ 
-                        duration: 2, 
-                        repeat: Infinity, 
-                        delay: index * 0.1,
-                        ease: "easeInOut"
-                      }}
-                    />
-                    <span className="text-sm text-slate-300">{skill}</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-devops-green" />
+                    <span className="text-xs md:text-sm text-slate-300">{skill}</span>
                   </div>
-                  <span className="text-xs font-mono text-devops-green">
+                  <span className="text-[10px] md:text-xs font-mono text-devops-green">
                     Healthy
                   </span>
                 </motion.div>
