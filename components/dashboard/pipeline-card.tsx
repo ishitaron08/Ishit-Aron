@@ -1,9 +1,10 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion, useReducedMotion } from "framer-motion";
-import { ExternalLink, Github, CheckCircle2, Clock, Play } from "lucide-react";
+import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
+import { ExternalLink, Github, CheckCircle2, Clock, Play, ChevronDown } from "lucide-react";
 import { cardVariants, staggerFastVariants, fadeUpVariants, easings } from "@/lib/animations";
+import { useState } from "react";
 
 interface PipelineCardProps {
   name: string;
@@ -26,6 +27,7 @@ export function PipelineCard({
   githubUrl,
   className,
 }: PipelineCardProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
   const statusConfig = {
     success: {
       icon: <CheckCircle2 className="w-4 h-4" />,
@@ -92,10 +94,12 @@ export function PipelineCard({
       viewport={{ once: true, margin: "-50px" }}
       variants={cardVariants}
       whileHover={prefersReducedMotion ? {} : "hover"}
+      onClick={() => setIsExpanded(!isExpanded)}
       className={cn(
         "group relative bg-devops-navy-light/60 border border-devops-grid-line rounded-lg",
         "hover:border-devops-green/40 transition-colors duration-300",
-        "overflow-hidden",
+        "overflow-hidden cursor-pointer",
+        isExpanded && "border-devops-green/50",
         className
       )}
     >
@@ -125,14 +129,47 @@ export function PipelineCard({
           </div>
           <span className="text-xs text-slate-500 font-mono">{date}</span>
         </div>
-        <h3 className="text-lg font-semibold text-white group-hover:text-devops-green transition-colors">
+        <h3 className="text-lg font-semibold text-white group-hover:text-devops-green transition-colors flex items-center justify-between">
           {name}
+          <motion.div
+            animate={{ rotate: isExpanded ? 180 : 0 }}
+            transition={{ duration: 0.3 }}
+            className="ml-2"
+          >
+            <ChevronDown className="w-5 h-5 text-slate-400" />
+          </motion.div>
         </h3>
       </div>
 
       {/* Pipeline Content */}
       <div className="p-4">
-        <p className="text-sm text-slate-400 mb-4 line-clamp-2">{description}</p>
+        {/* Collapsed description */}
+        <AnimatePresence mode="wait">
+          {!isExpanded ? (
+            <motion.p 
+              key="collapsed"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-sm text-slate-400 mb-4 line-clamp-2"
+            >
+              {description}
+            </motion.p>
+          ) : (
+            <motion.div
+              key="expanded"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="mb-4"
+            >
+              <p className="text-base text-slate-300 leading-relaxed">
+                {description}
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Tech Stack with staggered animation */}
         <motion.div 
@@ -188,7 +225,7 @@ export function PipelineCard({
         </div>
 
         {/* Actions */}
-        <div className="flex gap-2">
+        <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
           {demoUrl && demoUrl !== "#" && (
             <a
               href={demoUrl}

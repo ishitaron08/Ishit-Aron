@@ -66,7 +66,7 @@ export function About() {
                                 </div>
                             </div>
                             <p className="text-neutral-300 leading-relaxed">
-                                I&apos;m a Computer Science student at Meerut Institute of Engineering and Technology, 
+                                I&apos;m a Computer Science student at Lovely Professional University, 
                                 passionate about building modern, scalable, and user-friendly web applications. 
                                 With expertise in full-stack development, I specialize in React, Next.js, Node.js, 
                                 and cloud technologies like AWS and Azure.

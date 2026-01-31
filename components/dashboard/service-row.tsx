@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { ExternalLink } from "lucide-react";
 
 interface ServiceRowProps {
   name: string;
@@ -81,6 +82,7 @@ interface ServiceGridProps {
   services: Array<{
     name: string;
     category: string;
+    docUrl?: string;
   }>;
   className?: string;
 }
@@ -89,20 +91,24 @@ export function ServiceGrid({ services, className }: ServiceGridProps) {
   return (
     <div className={cn("grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2", className)}>
       {services.map((service, index) => (
-        <motion.div
+        <motion.a
           key={service.name}
+          href={service.docUrl || "#"}
+          target="_blank"
+          rel="noopener noreferrer"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.2, delay: index * 0.03 }}
           className={cn(
-            "service-badge justify-center py-2",
+            "service-badge justify-center py-2 group/service",
             "hover:border-devops-green/40 hover:bg-devops-green/5",
-            "transition-all duration-200 cursor-default"
+            "transition-all duration-200 cursor-pointer"
           )}
         >
           <span className="w-2 h-2 rounded-full bg-emerald-500" />
-          <span className="text-slate-300 truncate">{service.name}</span>
-        </motion.div>
+          <span className="text-slate-300 truncate group-hover/service:text-devops-green transition-colors">{service.name}</span>
+          <ExternalLink className="w-3 h-3 text-slate-500 group-hover/service:text-devops-cyan transition-colors ml-1" />
+        </motion.a>
       ))}
     </div>
   );

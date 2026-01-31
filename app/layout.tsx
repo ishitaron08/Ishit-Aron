@@ -9,7 +9,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ishit Aron | DevOps Control Room",
+  title: "Ishit Aron | Profile Dashboard",
   description: "Full Stack Developer & Computer Science Student - Portfolio Dashboard showcasing projects, skills, and experience in a DevOps monitoring style interface.",
   keywords: ["Ishit Aron", "Full Stack Developer", "Portfolio", "React", "Next.js", "DevOps", "Dashboard"],
 };
