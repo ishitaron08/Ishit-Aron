@@ -19,6 +19,28 @@ const projects = [
         color: "from-purple-500 to-violet-500",
     },
     {
+        title: "Supply-Fuel",
+        description: "Fuel supply chain management platform for tracking and optimizing fuel delivery logistics. Features real-time inventory monitoring, route optimization, and automated order processing with role-based access control.",
+        tags: ["React", "Node.js", "MongoDB", "Express.js"],
+        links: {
+            demo: "#",
+            github: "https://github.com/ishitaron08/supply-fuel",
+        },
+        date: "Jul '25",
+        color: "from-orange-500 to-red-500",
+    },
+    {
+        title: "Mario-Game",
+        description: "Classic Mario-style platformer game built from scratch with smooth physics, level progression, and interactive gameplay mechanics. Features sprite animations, collision detection, and dynamic scoring system.",
+        tags: ["JavaScript", "HTML5 Canvas", "CSS", "Game Dev"],
+        links: {
+            demo: "#",
+            github: "https://github.com/ishitaron08/mario-game",
+        },
+        date: "May '25",
+        color: "from-red-500 to-pink-500",
+    },
+    {
         title: "Job Hunt Portal",
         description: "Modern job searching application with real-time filtering and category-based job segmentation. Built with MERN stack, featuring 30% faster load times through optimized database queries and lazy loading.",
         tags: ["React", "Node.js", "MongoDB", "Tailwind CSS"],

@@ -157,8 +157,7 @@ export function HeroSection() {
           transition={{ delay: 0.6, duration: 0.5, ease: easings.smooth }}
         >
           <p className="text-slate-300 text-center text-sm md:text-base lg:text-lg leading-relaxed">
-            A passionate Computer Science student building modern,
-            scalable, and beautiful web applications.
+            Full Stack Developer passionate about crafting scalable backend systems and responsive, modern user experiences powered by cloud-native technologies.
           </p>
         </motion.div>
       </motion.div>
